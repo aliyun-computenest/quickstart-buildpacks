@@ -22,7 +22,7 @@ Service:
 Artifact:
   EcsImage:
     ArtifactType: EcsImage
-    ArtifactName: aliyun_3_2104_buildpacks_0_36_1
+    ArtifactName: aliyun_3_2104_buildpacks
     Description: Buildpacks on Alibaba cloud linux 3.2104
     ArtifactBuildProperty:
       RegionId: ap-southeast-1
