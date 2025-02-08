@@ -35,7 +35,7 @@ Artifact:
         # 安装和配置docker-ce
         yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
         yum makecache
-        yum install -y docker-ce
+        yum install -y docker-ce | grep -vi error
         systemctl enable docker
         mkdir -p /etc/docker
         tee /etc/docker/daemon.json <<-'EOF'
@@ -48,7 +48,7 @@ Artifact:
         systemctl restart docker
         
         # 安装其他依赖
-        yum install -y curl git
+        yum install -y curl git | grep -vi error
 
         # 安装logtail用于上报构建日志
         LOGTAIL_URL="http://logtail-release-ap-southeast-1.oss-ap-southeast-1-internal.aliyuncs.com/linux64/logtail.sh"
