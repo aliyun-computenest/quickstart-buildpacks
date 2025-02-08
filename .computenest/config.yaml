@@ -29,6 +29,8 @@ Artifact:
       SourceImageId: aliyun_3_x64_20G_alibase_20241218.vhd
       CommandContent: |-
         #!/bin/bash
+        yum check-update | grep -vi error
+        yum -y upgrade | grep -vi error
   
         # 安装和配置docker-ce
         yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
@@ -63,7 +65,7 @@ Artifact:
         CHECKSUM_URL="${DOWNLOAD_URL}.sha256"
         # 下载并校验 pack 文件
         echo "Downloading pack v${PACK_VERSION}..."
-        if ! curl -fsSL "$DOWNLOAD_URL" -o pack.tgz; then
+        if ! curl -fsSL "$DOWNLOAD_URL" -o pack-v${PACK_VERSION}-linux.tgz; then
             echo "Failed to download pack v${PACK_VERSION}."
             exit 1
         fi
@@ -78,9 +80,8 @@ Artifact:
             exit 1
         fi
         echo "Checksum verified successfully."
-        tar xvf pack.tgz
-        mv pack /usr/local/bin/pack
-        rm pack.tgz pack.tgz.sha256
+        tar xvzf pack-v${PACK_VERSION}-linux.tgz -C /usr/local/bin/
+        rm pack-v${PACK_VERSION}-linux.tgz pack.tgz.sha256
 
         # 拉取推荐builder镜像，便于切换
         # https://cloud.google.com/docs/buildpacks/builders?hl=zh-cn
@@ -93,6 +94,7 @@ Artifact:
         # paketo的builder镜像更新很频繁
         # https://github.com/paketo-buildpacks/builder-jammy-full
         docker pull paketobuildpacks/builder-jammy-full
+        docker pull paketobuildpacks/run-jammy-full
 
         # 指定默认builder
         pack config default-builder heroku/builder:24
